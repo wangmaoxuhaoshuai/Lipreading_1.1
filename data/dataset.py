@@ -32,8 +32,7 @@ class ReadDataset(Dataset):
         label = filelist[2]
         label = int(label)
         label = torch.LongTensor([label])
-        frames = load_sequence(filelist[1])
-        frames = data_augmentation(frames)
+        frames = load_sequence(filelist[1], self.augment)
         temporalvolume = sequence_2_tensor(frames)
         sample = {'temporalvolume': temporalvolume, 'label': label}
         return sample
@@ -64,7 +63,7 @@ class ReadPredictDataset(Dataset):
     """
     读取预测数据集，只有输入，没有标签
     """
-    def __init__(self, augment=True):
+    def __init__(self, augment=False):
         self.file_list = self.get_file_list()
         self.augment = augment
 
@@ -85,7 +84,7 @@ class ReadPredictDataset(Dataset):
         filelist = self.file_list[idx]
 
         samplename = filelist[0]
-        frames = load_sequence(filelist[1])
+        frames = load_sequence(filelist[1], self.augment)
         temporalvolume = sequence_2_tensor(frames)
 
         sample = {'temporalvolume': temporalvolume, 'samplename': samplename}

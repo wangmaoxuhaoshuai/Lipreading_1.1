@@ -13,15 +13,19 @@ def read_csv_file(filename):
     return data
 
 # 读取多个图片并转换为tensor的序列
-def load_sequence(filename):
+def load_sequence(filename, data_aug):
     sequenceDir = filename
     sequence = []
     for i in os.listdir(sequenceDir):
         imgDir = os.path.join(sequenceDir, i)
-        img = Image.open(imgDir).resize((112, 112))
+        img = Image.open(imgDir)
         img = img.convert('L')
-        img = functional.to_tensor(img)
+        if data_aug == False:
+            img = img.resize((112, 112))
+            img = functional.to_tensor(img)
         sequence.append(img)
+    if data_aug == True:
+        sequence = data_augmentation(sequence)
     return sequence
 
 # 将序列合并为一个tensor

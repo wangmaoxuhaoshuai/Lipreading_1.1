@@ -6,7 +6,7 @@ from import_sets import *
 class Validator():
     def __init__(self, dataset_file):
 
-        self.validation_dataset = ReadDataset(dataset_file)
+        self.validation_dataset = ReadDataset(dataset_file, False)
         self.validation_dataloader = DataLoader(
             self.validation_dataset,
             batch_size = options["input"]["batchsize"],
@@ -24,8 +24,6 @@ class Validator():
         validator_function = model.validator_function()
 
         for i_batch, sample_batched in enumerate(self.validation_dataloader):
-            if i_batch == 10:
-                break
             input = Variable(sample_batched['temporalvolume'])
             labels = sample_batched['label']
 
@@ -34,6 +32,7 @@ class Validator():
                 labels = labels.cuda(self.gpuid)
 
             outputs = model(input)
+            print("test {} samples".format(i_batch))
 
             count += validator_function(outputs, labels)
 
