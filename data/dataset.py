@@ -1,4 +1,4 @@
-from utils import read_csv_file, load_sequence, sequence_2_tensor
+from utils import read_csv_file, load_sequence, sequence_2_tensor, data_augmentation
 from import_sets import *
 """
 所有数据文件都从此读取
@@ -33,6 +33,7 @@ class ReadDataset(Dataset):
         label = int(label)
         label = torch.LongTensor([label])
         frames = load_sequence(filelist[1])
+        frames = data_augmentation(frames)
         temporalvolume = sequence_2_tensor(frames)
         sample = {'temporalvolume': temporalvolume, 'label': label}
         return sample

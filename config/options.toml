@@ -22,7 +22,7 @@ shuffle = true
 
 [model]
 type = "temp-conv"
-inputdim = 256
+inputdim = 128
 hiddendim = 256
 numclasses = 311
 numlstms = 2

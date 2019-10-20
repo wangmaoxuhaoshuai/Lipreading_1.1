@@ -245,13 +245,14 @@ class ResNetBBC(nn.Module):
         self.inputdims = options["model"]["inputdim"]
         self.batchsize = options["input"]["batchsize"]
 
-        self.resnetModel = resnet34(False, num_classes=self.inputdims)
+        # self.resnetModel = resnet34(False, num_classes=self.inputdims)
+        self.resnetModel = resnet18(False, num_classes=self.inputdims)
 
     def forward(self, input):
         transposed = input.transpose(1, 2).contiguous()
 
         view = transposed.view(-1, 64, 28, 28)
         output = self.resnetModel(view)
-        output = output.view(self.batchsize, -1, 256)
+        output = output.view(self.batchsize, -1, 128)
 
         return output

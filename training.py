@@ -36,7 +36,8 @@ class Trainer():
                 model.parameters(),
                 lr = self.learning_rate(epoch),
                 momentum = self.learningrate,
-                weight_decay = self.weightdecay)
+                # weight_decay = self.weightdecay
+            )
 
             for i_batch, sample_batched in enumerate(self.training_data_loader):
                 optimizer.zero_grad()
