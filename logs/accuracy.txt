@@ -1,0 +1,12 @@
+
+model: model_save/temp-conv0.pkl,correct count: 1, total count: 2185, accuracy: 0.0004576659038901602, date: 2019-10-19 08:00:33, 
+model: model_save/temp-conv1.pkl,correct count: 0, total count: 2185, accuracy: 0.0, date: 2019-10-19 08:00:34, 
+model: model_save/temp-conv2.pkl,correct count: 0, total count: 1876, accuracy: 0.0, date: 2019-10-19 08:00:36, 
+model: model_save/temp-conv3.pkl,correct count: 0, total count: 1876, accuracy: 0.0, date: 2019-10-19 08:00:37, 
+model: model_save/temp-conv4.pkl,correct count: 0, total count: 1874, accuracy: 0.0, date: 2019-10-19 08:00:38, 
+model: model_save/temp-conv0.pkl, correct count: 1, total count: 2185, accuracy: 0.0004576659038901602, date: 2019-10-19 11:25:02, 
+model: model_save/temp-conv1.pkl, correct count: 0, total count: 2185, accuracy: 0.0, date: 2019-10-19 14:08:34, 
+model: model_save/temp-conv2.pkl, correct count: 0, total count: 1876, accuracy: 0.0, date: 2019-10-19 15:19:25, 
+model: model_save/temp-conv0.pkl,
+model: model_save/temp-conv3.pkl, correct count: 0, total count: 1876, accuracy: 0.0, date: 2019-10-19 18:03:12, 
+model: model_save/temp-conv4.pkl, correct count: 0, total count: 1874, accuracy: 0.0, date: 2019-10-19 20:01:16, 

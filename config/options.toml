@@ -1,0 +1,57 @@
+title = "config file"
+
+[general]
+usecudnn = true
+usecudnnbenchmark = true
+gpuid = 0
+loadpretrainedmodel = true
+pretrainedmodelpath = [
+"model_save/temp-conv0.pkl",
+"model_save/temp-conv1.pkl",
+"model_save/temp-conv2.pkl",
+"model_save/temp-conv3.pkl",
+"model_save/temp-conv4.pkl",
+]
+savemodel = true
+model_save_directory_path = "model_save"
+
+
+[input]
+batchsize = 2
+shuffle = true
+
+[model]
+type = "temp-conv"
+inputdim = 256
+hiddendim = 256
+numclasses = 311
+numlstms = 2
+
+[training]
+train = true
+epochs = 10
+startepoch = 0
+statsfrequency = 1000
+learningrate = 0.003
+momentum = 0.9
+weightdecay = 0.0001
+
+[validation]
+validate = true
+saveaccuracy = true
+accuracyfilelocation = "accuracy.txt"
+
+[dataset]
+add_train_dataset_absolute_path = true
+train_dataset_absolute_path = "/home/maggi/dataset_lipreading/lip_train"
+test_dataset_absolute_path = "/home/maggi/dataset_lipreading/lip_test"
+train_dataset_annotation_file_set = ['data/lip_train.csv']
+test_dataset_annotation_file_set = ['data/lip_train.csv']
+map_index_hanzi_file_path = "data/label_table.csv"
+
+[testing]
+test_model = "testmodel.pkl"
+
+[log]
+logs_accuracy_path = "logs/accuracy.txt"
+logs_train_path = "logs/train_log.txt"
