@@ -41,6 +41,12 @@ class LSTMBackend(nn.Module):
                                 batch_first=True,
                                 bidirectional=True)
 
+        self.Module2 = nn.LSTM(input_size=options["model"]["inputdim"],
+                               hidden_size=options["model"]["hiddendim"],
+                               num_layers=options["model"]["numlstms"],
+                               batch_first=True,
+                               bidirectional=True)
+
         self.fc = nn.Linear(options["model"]["hiddendim"] * 2,
                                 options["model"]["numclasses"])
 
@@ -53,6 +59,7 @@ class LSTMBackend(nn.Module):
     def forward(self, input):
 
         temporalDim = 1
+        print(input.size())
 
         lstmOutput, _ = self.Module1(input)
 

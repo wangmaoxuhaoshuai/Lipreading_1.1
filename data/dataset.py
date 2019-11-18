@@ -8,6 +8,14 @@ print("Loading options...")
 with open('config/options.toml', 'r') as optionsFile:
     options = toml.loads(optionsFile.read())
 
+if not os.path.exists(options["general"]["model_save_directory_path"]):
+    os.mkdir(options["general"]["model_save_directory_path"])
+    print("Make dir {}...".format(options["general"]["model_save_directory_path"]))
+
+if not os.path.exists(options["log"]["logs_dir"]):
+    os.mkdir(options["log"]["logs_dir"])
+    print("Make dir {}...".format(options["log"]["logs_dir"]))
+
 # 标签到汉字的映射
 map_index_hanzi = []
 with open(options["dataset"]["map_index_hanzi_file_path"], encoding='UTF-8') as f:
@@ -20,7 +28,7 @@ class ReadDataset(Dataset):
     """
     读取 训练/测试 数据集
     """
-    def __init__(self, datasetname, augment=True):
+    def __init__(self, datasetname, augment=False):
         self.file_list = self.build_file_list(datasetname)
         self.augment = augment
 

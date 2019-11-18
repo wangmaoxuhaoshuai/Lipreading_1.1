@@ -4,7 +4,7 @@
 from import_sets import *
 class Trainer():
     def __init__(self, dataset_file):
-        self.training_dataset = ReadDataset(dataset_file)
+        self.training_dataset = ReadDataset(dataset_file, True)
         self.training_data_loader = DataLoader(
             self.training_dataset,
             batch_size = options["input"]["batchsize"],
@@ -24,37 +24,41 @@ class Trainer():
         return self.learningrate * pow(0.5, decay)
 
     #
-    def training(self, model, epochs):
+    def training(self, model, epoch, epochs):
         # set loss
         criterion = model.loss()
         # transfer the model to the GPU.
         if (self.usecudnn):
             criterion = criterion.cuda(self.gpuid)
+        #
+        # optimizer = optim.SGD(
+        #     model.parameters(),
+        #     lr = self.learning_rate(epoch),
+        #     # momentum = self.learningrate,
+        #     # weight_decay = self.weightdecay
+        # )
 
-        for epoch in range(epochs):
-            optimizer = optim.SGD(
-                model.parameters(),
-                lr = self.learning_rate(epoch),
-                momentum = self.learningrate,
-                # weight_decay = self.weightdecay
-            )
+        optimizer = optim.Adadelta(
+            model.parameters(),
+            lr=self.learning_rate(epoch),
+        )
 
-            for i_batch, sample_batched in enumerate(self.training_data_loader):
-                optimizer.zero_grad()
-                # 图片序列
-                input = Variable(sample_batched['temporalvolume'])
-                # 标签
-                labels = Variable(sample_batched['label'])
+        for i_batch, sample_batched in enumerate(self.training_data_loader):
+            optimizer.zero_grad()
+            # 图片序列
+            input = Variable(sample_batched['temporalvolume'])
+            # 标签
+            labels = Variable(sample_batched['label'])
 
-                if(self.usecudnn):
-                    input = input.cuda(self.gpuid)
-                    labels = labels.cuda(self.gpuid)
+            if(self.usecudnn):
+                input = input.cuda(self.gpuid)
+                labels = labels.cuda(self.gpuid)
 
-                outputs = model(input)
-                loss = criterion(outputs, labels.squeeze(1))
-                if i_batch % 10 == 0:
-                    print("epoch : {} / {}, iteration : {}, loss : {}".format(
-                        epoch, epochs, i_batch, loss))
-                loss.backward()
-                optimizer.step()
+            outputs = model(input)
+            loss = criterion(outputs, labels.squeeze(1))
+            if i_batch % 10 == 0:
+                print("epoch {} / {}, iteration : {}, loss : {}".format(epoch, epochs, i_batch, loss))
+            loss.backward()
+            optimizer.step()
+
 

@@ -16,12 +16,14 @@ def read_csv_file(filename):
 def load_sequence(filename, data_aug):
     sequenceDir = filename
     sequence = []
-    for i in os.listdir(sequenceDir):
+    all_imgs = os.listdir(sequenceDir) # os.listdir 读取顺序不是按照数字
+    all_imgs.sort(key = lambda x: int(x[:-4]))
+    for i in all_imgs:
         imgDir = os.path.join(sequenceDir, i)
         img = Image.open(imgDir)
-        img = img.convert('L')
+        img = img.resize((112, 112))
+        # img = img.convert('L')
         if data_aug == False:
-            img = img.resize((112, 112))
             img = functional.to_tensor(img)
         sequence.append(img)
     if data_aug == True:
@@ -30,35 +32,26 @@ def load_sequence(filename, data_aug):
 
 # 将序列合并为一个tensor
 def sequence_2_tensor(sequence):
-    temporalvolume = torch.FloatTensor(1, 24, 112, 112) # 数据集中每个文件夹下图片最多有24个
+    # temporalvolume = torch.FloatTensor(1, 24, 112, 112) # 数据集中每个文件夹下图片最多有24个
+    temporalvolume = torch.FloatTensor(3, 24, 112, 112)
     zeros = torch.zeros([112, 112])
     length = len(sequence)
-    for i in range(24):
-        if i < length:
-            temporalvolume[0][i] = sequence[i]
-        else:
-            temporalvolume[0][i] = zeros
+    for temp_channel in range(24):
+        for rgb_channel in range(3):
+            if temp_channel < length:
+                temporalvolume[rgb_channel][temp_channel] = sequence[temp_channel][rgb_channel]
+            else:
+                temporalvolume[rgb_channel][temp_channel] = zeros
     return temporalvolume
 
 # 数据增强
 def data_augmentation(frames):
-    crop = StatefulRandomCrop((122, 122), (112, 112))
-    flip = StatefulRandomHorizontalFlip(0.5)
-
-    croptransform = transforms.Compose([crop, flip])
-
+    random_seed = np.random.randint(100)
+    np.random.seed(random_seed)
     for i in range(0, len(frames)):
-        result = transforms.Compose([
-            transforms.Resize((127, 127)),
-            transforms.CenterCrop((122, 122)),
-            croptransform,
-            transforms.Grayscale(num_output_channels=1),
-            transforms.ToTensor(),
-            # transforms.Normalize([0.4161,],[0.1688,]),
-        ])(frames[i])
-
+        result = randomColor(frames[i], random_seed)
+        result = transforms.ToTensor()(result)
         frames[i] = result
-
     return frames
 
 # 随机裁剪
@@ -100,3 +93,22 @@ class StatefulRandomHorizontalFlip(object):
 
     def __repr__(self):
         return self.__class__.__name__ + '(p={})'.format(self.p)
+
+# 颜色抖动
+def randomColor(image, random_seed):
+
+    np.random.seed(random_seed)
+
+    random_factor = np.random.randint(80, 121) / 100.  # 随机因子
+    image = ImageEnhance.Color(image).enhance(random_factor)  # 调整图像的饱和度
+
+    random_factor = np.random.randint(80, 121) / 100.  # 随机因子
+    image = ImageEnhance.Brightness(image).enhance(random_factor)  # 调整图像的亮度
+
+    random_factor = np.random.randint(80, 121) / 100.  # 随机因1子
+    image = ImageEnhance.Contrast(image).enhance(random_factor)  # 调整图像对比度
+
+    random_factor = np.random.randint(0, 201) / 100.  # 随机因子
+    image = ImageEnhance.Sharpness(image).enhance(random_factor)  # 调整图像锐度
+
+    return image

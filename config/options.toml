@@ -5,34 +5,30 @@ usecudnn = true
 usecudnnbenchmark = true
 gpuid = 0
 loadpretrainedmodel = true
-pretrainedmodelpath = [
-"model_save/temp-conv0.pkl",
-"model_save/temp-conv1.pkl",
-"model_save/temp-conv2.pkl",
-"model_save/temp-conv3.pkl",
-"model_save/temp-conv4.pkl",
-]
+pretrainedmodelpath = "model_save/densenet201100.pkl"
+
 savemodel = true
 model_save_directory_path = "model_save"
 
 
 [input]
-batchsize = 2
+batchsize = 16
 shuffle = true
 
 [model]
-type = "temp-conv"
-inputdim = 128
+type = "densenet201"
+inputdim = 256
 hiddendim = 256
 numclasses = 311
 numlstms = 2
 
 [training]
 train = true
-epochs = 10
+start_epochs = 100
+end_epochs = 150
 startepoch = 0
 statsfrequency = 1000
-learningrate = 0.003
+learningrate = 0.1
 momentum = 0.9
 weightdecay = 0.0001
 
@@ -43,10 +39,11 @@ accuracyfilelocation = "accuracy.txt"
 
 [dataset]
 add_train_dataset_absolute_path = true
-train_dataset_absolute_path = "/home/maggi/dataset_lipreading/lip_train"
-test_dataset_absolute_path = "/home/maggi/dataset_lipreading/lip_test"
-train_dataset_annotation_file_set = ['data/lip_train.csv']
-test_dataset_annotation_file_set = ['data/lip_train.csv']
+train_dataset_absolute_path = "/home/z195/home/z195/datasets/crop_lips/lip_train"
+test_dataset_absolute_path = "/home/maggi/dataset/lip/crop_lips/lip_test"
+train_dataset_annotation_file_set = ""
+train_test_dataset_annotation_file_set = ""
+test_dataset_annotation_file_set = ""
 map_index_hanzi_file_path = "data/label_table.csv"
 
 [testing]
@@ -55,3 +52,4 @@ test_model = "testmodel.pkl"
 [log]
 logs_accuracy_path = "logs/accuracy.txt"
 logs_train_path = "logs/train_log.txt"
+logs_dir = "logs"

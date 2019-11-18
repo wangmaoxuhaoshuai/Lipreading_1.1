@@ -18,14 +18,22 @@ class LipRead(nn.Module):
             m.requires_grad=False
 
         if(options["model"]["type"] == "LSTM-init"):
-            self.frontend.apply(freeze)
-            self.resnet.apply(freeze)
+            for i_par in self.frontend.parameters():
+                freeze(i_par)
+            for i_par in self.resnet.parameters():
+                freeze(i_par)
 
-        self.frontend.apply(freeze)
-        self.resnet.apply(freeze)
+        # self.frontend.apply(freeze)
+        # self.resnet.apply(freeze)
+
+        # for i_par in self.frontend.parameters():
+        #     freeze(i_par)
+        # for i_par in self.resnet.parameters():
+        #     freeze(i_par)
 
         #function to initialize the weights and biases of each module. Matches the
         #classname with a regular expression to determine the type of the module, then
+        #initializes the weights for it.
         #initializes the weights for it.
         def weights_init(m):
             classname = m.__class__.__name__
@@ -47,7 +55,7 @@ class LipRead(nn.Module):
         if(self.type == "LSTM" or self.type == "LSTM-init"):
             output = self.lstm(self.resnet(self.frontend(input)))
 
-        return output
+        return  output
 
     def loss(self):
         if(self.type == "temp-conv"):

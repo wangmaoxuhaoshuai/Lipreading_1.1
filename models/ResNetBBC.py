@@ -191,6 +191,17 @@ def resnet18(pretrained=False, **kwargs):
         model.load_state_dict(model_zoo.load_url(model_urls['resnet18']))
     return model
 
+def resnet26(pretrained=False, **kwargs):
+    """
+
+    :param pretrained:
+    :param kwargs:
+    :return:
+    """
+    model = ResNet(BasicBlock, [3, 3, 3, 3], **kwargs)
+    if pretrained:
+        pass
+    return model
 
 def resnet34(pretrained=False, **kwargs):
     """Constructs a ResNet-34 model.
@@ -245,14 +256,15 @@ class ResNetBBC(nn.Module):
         self.inputdims = options["model"]["inputdim"]
         self.batchsize = options["input"]["batchsize"]
 
-        # self.resnetModel = resnet34(False, num_classes=self.inputdims)
-        self.resnetModel = resnet18(False, num_classes=self.inputdims)
+        self.resnetModel = resnet34(False, num_classes=self.inputdims)
+        # self.resnetModel = resnet18(False, num_classes=self.inputdims)
+        # self.resnetModel = resnet50(False, num_classes=self.inputdims)
 
     def forward(self, input):
         transposed = input.transpose(1, 2).contiguous()
 
         view = transposed.view(-1, 64, 28, 28)
         output = self.resnetModel(view)
-        output = output.view(self.batchsize, -1, 128)
+        output = output.view(self.batchsize, -1, 256)
 
         return output
